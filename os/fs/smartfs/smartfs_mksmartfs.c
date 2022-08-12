@@ -83,7 +83,7 @@
  * Name: mksmartfs
  *
  * Description:
- *   Make a SMART Flash file system image on the specified block device
+ *   Make a jSmartFs Flash file system image on the specified block device
  *
  * Inputs:
  *   pathname - the full path to a registered block driver
@@ -142,8 +142,8 @@ int mksmartfs(FAR const char *pathname, bool force)
 		}
 	}
 
-	/* Validate the block device is a SMART device */
-	/* Perform a low-level SMART format */
+	/* Validate the block device is a jSmartFs device */
+	/* Perform a low-level jSmartFs format */
 #ifdef CONFIG_SMARTFS_MULTI_ROOT_DIRS
 	ret = inode->u.i_bops->ioctl(inode, BIOC_LLFORMAT, nrootdirs);
 #else
