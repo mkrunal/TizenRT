@@ -18,7 +18,7 @@
 /****************************************************************************
  * fs/driver/mtd/smart.c
  *
- * Journaling Sector Mapped Allocation for Really Tiny (jSmartFs) Flash block driver.
+ * Sector Mapped Allocation for Really Tiny (SMART) Flash block driver.
  *
  *   Copyright (C) 2013-2014 Ken Pettit. All rights reserved.
  *   Author: Ken Pettit <pettitkd@gmail.com>
@@ -265,7 +265,7 @@ struct smart_struct_s {
 	uint16_t lastallocblock;	/* Last  block we allocated a sector from */
 	uint16_t freesectors;		/* Total number of free sectors */
 	uint16_t releasesectors;	/* Total number of released sectors */
-	uint16_t mtdBlksPerSector;	/* Number of MTD blocks per jSmartFs Sector */
+	uint16_t mtdBlksPerSector;	/* Number of MTD blocks per SMART Sector */
 	uint16_t sectorsPerBlk;		/* Number of sectors per erase block */
 	uint16_t sectorsize;		/* Sector size on device */
 	uint16_t totalsectors;		/* Total number of sectors on device */
@@ -433,7 +433,7 @@ struct smart_journal_entry_s {
 	uint8_t crc16[2];			/* CRC-16 for current journal data */
 	uint8_t psector[2];			/* Target Physical Sector, For MTD_ERASE, Target Physical Block */
 	uint8_t seq[2];				/* Sequence number of Journal for validation check */
-	uint8_t status;				/* Journal Status low 4bits for state, high 4bits for type */
+	uint8_t status;				/* Journal Staus low 4bits for state, high 4bits for type */
 };
 
 typedef struct smart_journal_entry_s journal_log_t;
@@ -605,7 +605,7 @@ FAR static void *smart_malloc(FAR struct smart_struct_s *dev, size_t bytes, cons
 /****************************************************************************
  * Name: smart_free
  *
- * Description:  Perform jSmartFs memory free operation.
+ * Description:  Perform smart memory free operation.
  *
  ****************************************************************************/
 
@@ -932,7 +932,7 @@ static ssize_t smart_write(FAR struct inode *inode, FAR const unsigned char *buf
 
 	/* I think maybe we need to lock on a mutex here. */
 
-	/* Get the aligned block.  Here it is assumed: (1) The number of R/W blocks
+	/* Get the aligned block.  Here is is assumed: (1) The number of R/W blocks
 	 * per erase block is a power of 2, and (2) the erase begins with that same
 	 * alignment.
 	 */
@@ -940,7 +940,7 @@ static ssize_t smart_write(FAR struct inode *inode, FAR const unsigned char *buf
 	mask = dev->sectorsPerBlk - 1;
 	alignedblock = ((start_sector + mask) & ~mask) * dev->mtdBlksPerSector;
 
-	/* Convert jSmartFs blocks into MTD blocks. */
+	/* Convert SMART blocks into MTD blocks. */
 
 	mtdstartblock = (off_t)start_sector * (off_t)dev->mtdBlksPerSector;
 	mtdblockcount = (off_t)nsectors * (off_t)dev->mtdBlksPerSector;
@@ -1103,7 +1103,7 @@ static int smart_setsectorsize(FAR struct smart_struct_s *dev, uint16_t size)
 	}
 	
 #ifdef CONFIG_MTD_SMART_JOURNALING
-	/** Journal Sector is reserved at the last of jSmartFs partition, it doesn't use MTD Header.
+	/** Journal Sector is reserved at the last of smartfs partition, it doesn't use MTD Header.
 	  * We will use it as a contigous memory space...
 	  */
 	size_t log_size = sizeof(journal_log_t);
@@ -1301,13 +1301,13 @@ static int smart_setsectorsize(FAR struct smart_struct_s *dev, uint16_t size)
 
 	dev->rwbuffer = (FAR char *)smart_malloc(dev, size, "RW Buffer");
 	if (!dev->rwbuffer) {
-		fdbg("Error allocating jSmartFs read/write buffer\n");
+		fdbg("Error allocating SMART read/write buffer\n");
 		goto errexit;
 	}
 
 	dev->bytebuffer = (FAR uint8_t *)smart_malloc(dev, size, "Byte Buffer");
 	if (!dev->bytebuffer) {
-		fdbg("Error allocating jSmartFs bytebuffer\n");
+		fdbg("Error allocating SMART bytebuffer\n");
 		goto errexit;
 	}
 
