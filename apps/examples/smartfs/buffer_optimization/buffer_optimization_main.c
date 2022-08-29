@@ -324,6 +324,6 @@ int buffer_optimization_main(int argc, char *argv[])
 
 error_with_frt_fd:
 	close(frt_fd);
-	printf("SmartFs Optimized Buffer Test Example Exits\n\n");
+	printf("jSmartFs Optimized Buffer Test Example Exits\n\n");
 	return ret;
 }

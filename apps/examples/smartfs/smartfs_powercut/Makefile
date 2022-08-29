@@ -54,7 +54,7 @@
 -include $(TOPDIR)/Make.defs
 include $(APPDIR)/Make.defs
 
-# smartfs powercut Test built-in application info
+# jSmartFs powercut Test built-in application info
 
 APPNAME = smartfs_powercut
 FUNCNAME = $(APPNAME)_main
@@ -62,7 +62,7 @@ PRIORITY = SCHED_PRIORITY_DEFAULT
 STACKSIZE = 4096
 THREADEXEC = TASH_EXECMD_ASYNC
 
-# smartfs powercut Test Example
+# jSmartFs powercut Test Example
 
 ASRCS =
 CSRCS =
